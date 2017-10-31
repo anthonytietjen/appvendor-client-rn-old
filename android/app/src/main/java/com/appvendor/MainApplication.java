@@ -1,4 +1,4 @@
-package com.appvendor;
+package com.stratuscube.appvendor;
 
 import android.app.Application;
 
