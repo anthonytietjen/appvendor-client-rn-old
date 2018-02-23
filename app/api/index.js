@@ -3,8 +3,9 @@ import {
     Platform
 } from 'react-native';
 
-var webServiceBase = 'http://192.168.1.16:8080/app/api/';
-webServiceBase = 'https://appvendor-appvendor.rhcloud.com/app/api/';
+var isDevMode = false;
+var S3PublicBase = "https://s3.amazonaws.com/appvendor-public/";
+var webServiceBase = isDevMode ? 'http://172.20.10.9:8080/app/api/' : 'https://mqy8p0cab9.execute-api.us-east-1.amazonaws.com/Prod/app/api/'; //'https://appvendor-appvendor.rhcloud.com/app/api/';
 var appVersion = '201701051928';
 var appPlatform = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -123,7 +124,9 @@ exports.putListingAsBlobAPI = (listing, sessionId:string) => {
 }
 
 exports.getListingsAPI = (sessionId:string) => {
-    return fetch(webServiceBase + 'listing/get/', {
+	const url = webServiceBase + 'listing/get/';
+	console.log('fetching url: ' + url);
+    return fetch(url, {
         method: 'GET',
         headers: getHeaders(sessionId != '0' ? sessionId : null)
     })
@@ -147,7 +150,9 @@ exports.getListingsAPI = (sessionId:string) => {
 		} else {
 			return responseJson.listings;
 		}
-    });
+    }).catch((reason) =>{
+		console.log('Error connecting. Reason: ', reason)
+	});
 }
 
 exports.getCategoriesAPI = (sessionId:string) => {
