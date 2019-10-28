@@ -1,6 +1,6 @@
 /* @flow */
 import {
-    Platform
+  Platform
 } from 'react-native';
 
 var isDevMode = false;
@@ -9,237 +9,237 @@ var webServiceBase = isDevMode ? 'http://172.20.10.9:8080/app/api/' : 'https://m
 var appVersion = '201701051928';
 var appPlatform = Platform.OS === 'ios' ? 'ios' : 'android';
 
-var getHeaders = (sessionId:string) => {
-    let headers = {
-        'Accept' : 'application/json',
-        'Content-type' : 'application/json',
-        'app-version' : appVersion,
-        'app-platform' : appPlatform
-    };
+var getHeaders = (sessionId: string) => {
+  let headers = {
+    'Accept': 'application/json',
+    'Content-type': 'application/json',
+    'app-version': appVersion,
+    'app-platform': appPlatform
+  };
 
-	if(sessionId !== null){
-		headers.sessionId = sessionId;
-	}
+  if (sessionId !== null) {
+    headers.sessionId = sessionId;
+  }
 
-	return headers;
+  return headers;
 };
 
 exports.webServiceBase = webServiceBase;
 exports.appVersion = appVersion;
 exports.appPlatform = appPlatform;
 
-exports.saveProfileAPI = (userProfileModel, sessionId:string) => {
-    console.log('saveProfileAPI');
+exports.saveProfileAPI = (userProfileModel, sessionId: string) => {
+  console.log('saveProfileAPI');
 
-    return fetch(webServiceBase + 'account/saveProfile/', {
-        method: 'POST',
-		headers: getHeaders(sessionId != '0' ? sessionId : null),
-        body: JSON.stringify({
-            displayName                 : userProfileModel.displayName,
-            notifyOfDailyLatestListings : userProfileModel.notifyOfDailyLatestListings,
-            notifyOfNewsletterWeekly    : userProfileModel.notifyOfNewsletterWeekly,
-            notifyOfNewsletterMonthly   : userProfileModel.notifyOfNewsletterMonthly,
-        })
+  return fetch(webServiceBase + 'account/saveProfile/', {
+    method: 'POST',
+    headers: getHeaders(sessionId != '0' ? sessionId : null),
+    body: JSON.stringify({
+      displayName: userProfileModel.displayName,
+      notifyOfDailyLatestListings: userProfileModel.notifyOfDailyLatestListings,
+      notifyOfNewsletterWeekly: userProfileModel.notifyOfNewsletterWeekly,
+      notifyOfNewsletterMonthly: userProfileModel.notifyOfNewsletterMonthly,
     })
+  })
     .then((response) => {
-        console.log(response);
-        return response.json();
+      console.log(response);
+      return response.json();
     })
     .then((responseJson) => {
-        console.log('responseJson', responseJson);
-        return responseJson.userProfile;
+      console.log('responseJson', responseJson);
+      return responseJson.userProfile;
     });
 }
 
-exports.meAPI = (sessionId:string) => {
-    return fetch(webServiceBase + 'account/me/', {
-        method: 'POST',
-        headers: getHeaders(sessionId != '0' ? sessionId : null)
-    })
+exports.meAPI = (sessionId: string) => {
+  return fetch(webServiceBase + 'account/me/', {
+    method: 'POST',
+    headers: getHeaders(sessionId != '0' ? sessionId : null)
+  })
     .then((response) => {
-        //console.log(response);
-        return response.json();
+      //console.log(response);
+      return response.json();
     })
     .then((responseJson) => {
-        console.log('responseJson', responseJson);
-        
-        return responseJson;
+      console.log('responseJson', responseJson);
+
+      return responseJson;
     });
 }
 
-exports.putListingAPI = (listing, sessionId:string) => {
-	console.log('putListingAPI');
+exports.putListingAPI = (listing, sessionId: string) => {
+  console.log('putListingAPI');
 
-    let headers = {
-        'Accept' : 'application/json',
-        'Content-type' : 'application/json',
-        'app-version' : appVersion,
-        'app-platform' : appPlatform,
-        'sessionid': sessionId
-    };
+  let headers = {
+    'Accept': 'application/json',
+    'Content-type': 'application/json',
+    'app-version': appVersion,
+    'app-platform': appPlatform,
+    'sessionid': sessionId
+  };
 
-    return fetch(webServiceBase + 'listing/put/', {
-        method: 'POST',
-        headers: getHeaders(sessionId),
-        body: JSON.stringify(listing)
-    })
+  return fetch(webServiceBase + 'listing/put/', {
+    method: 'POST',
+    headers: getHeaders(sessionId),
+    body: JSON.stringify(listing)
+  })
     .then((response) => {
-        console.log(response);
-        return response.json();
+      console.log(response);
+      return response.json();
     })
     .then((responseJson) => {
-        console.log('responseJson', responseJson);
-        return responseJson.listingId;
+      console.log('responseJson', responseJson);
+      return responseJson.listingId;
     });
 }
 
-exports.putListingAsBlobAPI = (listing, sessionId:string) => {
+exports.putListingAsBlobAPI = (listing, sessionId: string) => {
 
-    let body = new FormData();
-    body.append('images', {
-        uri: listing.imageUrl1,
-        type: 'multipart/formdata',
-        name: 'image1.jpeg'
-    });
-    body.append('images', {
-        uri: listing.imageUrl2,
-        type: 'multipart/formdata',
-        name: 'image2.jpeg'
-    });
+  let body = new FormData();
+  body.append('images', {
+    uri: listing.imageUrl1,
+    type: 'multipart/formdata',
+    name: 'image1.jpeg'
+  });
+  body.append('images', {
+    uri: listing.imageUrl2,
+    type: 'multipart/formdata',
+    name: 'image2.jpeg'
+  });
 
-    return fetch(webServiceBase + 'listing/put2/', {
-        method: 'POST',
-		headers: getHeaders(sessionId),
-        body
-    })
+  return fetch(webServiceBase + 'listing/put2/', {
+    method: 'POST',
+    headers: getHeaders(sessionId),
+    body
+  })
     .then((response) => {
-        console.log(response);
-        return response.json();
+      console.log(response);
+      return response.json();
     })
     .then((responseJson) => {
-        console.log('responseJson', responseJson);
-        return responseJson;
+      console.log('responseJson', responseJson);
+      return responseJson;
     });
 
 }
 
-exports.getListingsAPI = (sessionId:string) => {
-	const url = webServiceBase + 'listing/get/';
-	console.log('fetching url: ' + url);
-    return fetch(url, {
-        method: 'GET',
-        headers: getHeaders(sessionId != '0' ? sessionId : null)
-    })
+exports.getListingsAPI = (sessionId: string) => {
+  const url = webServiceBase + 'listing/get/';
+  console.log('fetching url: ' + url);
+  return fetch(url, {
+    method: 'GET',
+    headers: getHeaders(sessionId != '0' ? sessionId : null)
+  })
     .then((response) => {
-        //console.log(response);
-        return response.json();
+      //console.log(response);
+      return response.json();
     })
     .then((responseJson) => {
-        console.log('responseJson', responseJson);
-        //console.log('responseJson.listings', responseJson.listings);
+      console.log('responseJson', responseJson);
+      //console.log('responseJson.listings', responseJson.listings);
 
-		if(responseJson.updateRequired){		
-			return {
-				updateRequired:true,
-				updateUrl: responseJson.updateUrl
-			};
-		} else if(responseJson.invalidSession){		
-			return {
-				invalidSession:true
-			};
-		} else {
-			return responseJson.listings;
-		}
-    }).catch((reason) =>{
-		console.log('Error connecting. Reason: ', reason)
-	});
-}
-
-exports.getCategoriesAPI = (sessionId:string) => {
-    return fetch(webServiceBase + 'categories/get/', {
-        method: 'GET',
-        headers: getHeaders(sessionId != '0' ? sessionId : null)
-    })
-    .then((response) => {
-        //console.log(response);
-        return response.json();
-    })
-    .then((responseJson) => {
-        //console.log('responseJson', responseJson);
-
-        let categoryIdsToIgnore = responseJson.categoriesToIgnore.map((category) => {
-            return category.categoryId;
-        });
-        
-        return {categories: responseJson.categories, categoryIdsToIgnore};
+      if (responseJson.updateRequired) {
+        return {
+          updateRequired: true,
+          updateUrl: responseJson.updateUrl
+        };
+      } else if (responseJson.invalidSession) {
+        return {
+          invalidSession: true
+        };
+      } else {
+        return responseJson.listings;
+      }
+    }).catch((reason) => {
+      console.log('Error connecting. Reason: ', reason)
     });
 }
 
-exports.setCategoryIdsToIgnoreAPI = (sessionId:string, categoryIdsToIgnore:Array<number>) => {
-    return fetch(webServiceBase + 'categories/setCategoryIdsToIgnore/', {
-        method: 'POST',
-        headers: getHeaders(sessionId != '0' ? sessionId : null),
-        body: JSON.stringify({
-            categoryIdsToIgnore
-        })
-    })
+exports.getCategoriesAPI = (sessionId: string) => {
+  return fetch(webServiceBase + 'categories/get/', {
+    method: 'GET',
+    headers: getHeaders(sessionId != '0' ? sessionId : null)
+  })
     .then((response) => {
-        //console.log(response);
-        return response.json();
+      //console.log(response);
+      return response.json();
     })
     .then((responseJson) => {
-        //console.log('responseJson', responseJson);
-        
+      //console.log('responseJson', responseJson);
+
+      let categoryIdsToIgnore = responseJson.categoriesToIgnore.map((category) => {
+        return category.categoryId;
+      });
+
+      return { categories: responseJson.categories, categoryIdsToIgnore };
+    });
+}
+
+exports.setCategoryIdsToIgnoreAPI = (sessionId: string, categoryIdsToIgnore: Array<number>) => {
+  return fetch(webServiceBase + 'categories/setCategoryIdsToIgnore/', {
+    method: 'POST',
+    headers: getHeaders(sessionId != '0' ? sessionId : null),
+    body: JSON.stringify({
+      categoryIdsToIgnore
+    })
+  })
+    .then((response) => {
+      //console.log(response);
+      return response.json();
+    })
+    .then((responseJson) => {
+      //console.log('responseJson', responseJson);
+
+      return true;
+    });
+}
+
+exports.deleteListingAPI = (sessionId: string, listingId: number) => {
+  return fetch(webServiceBase + 'listing/delete/', {
+    method: 'POST',
+    headers: getHeaders(sessionId),
+    body: JSON.stringify({
+      listingId
+    })
+  })
+    .then((response) => {
+      //console.log(response);
+      return response.json();
+    })
+    .then((responseJson) => {
+      //console.log('responseJson', responseJson);
+      return true;
+    });
+}
+
+exports.logoutAPI = (sessionId: string) => {
+  console.log('logoutAPI()');
+  console.log('sessionId', sessionId);
+
+  return fetch(webServiceBase + 'account/logout', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-type': 'application/json',
+      'app-version': appVersion,
+      'app-platform': appPlatform,
+      'sessionid': sessionId
+    },
+    body: JSON.stringify({
+      sessionId: sessionId
+    })
+  })
+    .then((response) => {
+      console.log('1', response);
+      return response.json();
+    })
+    .then((responseJson) => {
+      console.log('2', responseJson);
+
+      if (responseJson.invalidSession) {
         return true;
+      }
+
+      return responseJson;
     });
-}
-
-exports.deleteListingAPI = (sessionId:string, listingId:number) => {
-    return fetch(webServiceBase + 'listing/delete/', {
-        method: 'POST',
-        headers: getHeaders(sessionId),
-        body: JSON.stringify({
-            listingId
-        })
-    })
-    .then((response) => {
-        //console.log(response);
-        return response.json();
-    })
-    .then((responseJson) => {
-        //console.log('responseJson', responseJson);
-        return true;
-    });
-}
-
-exports.logoutAPI = (sessionId:string) => {
-	console.log('logoutAPI()');
-	console.log('sessionId', sessionId);
-
-	return fetch(webServiceBase + 'account/logout', {
-		method : 'POST',
-		headers : {
-			'Accept' : 'application/json',
-			'Content-type' : 'application/json',
-			'app-version' : appVersion,
-			'app-platform' : appPlatform,
-			'sessionid' : sessionId
-		},
-		body : JSON.stringify({
-			sessionId : sessionId
-		})
-	})
-	.then((response) => {
-		console.log('1', response);
-		return response.json();
-	})
-	.then((responseJson) => {
-		console.log('2', responseJson);
-
-		if(responseJson.invalidSession){
-			return true;
-		}
-
-		return responseJson;
-	});
 }
