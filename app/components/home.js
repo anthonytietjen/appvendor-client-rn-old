@@ -11,9 +11,9 @@ import {
   StyleSheet,
   Text,
   View,
-  ListView,
   Image
 } from 'react-native';
+import ListView from 'deprecated-react-native-listview';
 
 import type { IListing } from '../interfaces';
 import { clickedRow, getListings, showFlagListing } from '../actions';
