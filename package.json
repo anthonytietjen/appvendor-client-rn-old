@@ -12,7 +12,7 @@
   "dependencies": {
     "deprecated-react-native-listview": "0.0.6",
     "react": "16.9.0",
-    "react-native": "0.61.3",
+    "react-native": "0.62.3",
     "react-native-deprecated-custom-components": "git+https://github.com/facebookarchive/react-native-custom-components.git",
     "react-native-image-picker": "^1.1.0",
     "react-native-keyboard-aware-scrollview": "^2.0.0",
